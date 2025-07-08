@@ -1,3 +1,5 @@
 .idea
 out
 genMdp.iml
+target
+pom.xml
