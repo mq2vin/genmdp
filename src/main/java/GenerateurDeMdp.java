@@ -8,15 +8,20 @@ public class GenerateurDeMdp {
 
     private final int tailleMdp;
 
+
     public GenerateurDeMdp(String[] args){
         this.args = args;
-        this.tailleMdp = definirTailleMdp(args);
+        this.tailleMdp = this.definirTailleMdp();
     }
 
     public void lancement(){
-        String mdp = genererMdp();
-        System.out.println(mdp);
-
+        if (args.length == 0 && contientArg(args, "-h")) {
+            this.afficherAide();
+        }
+        else {
+            String mdp = this.genererMdp();
+            System.out.println(mdp);
+        }
     }
 
     private String genererMdpNonMelanger(){
@@ -35,30 +40,37 @@ public class GenerateurDeMdp {
         }
     }
 
-    public String genererMdp(){
-
-        String mdpNonMelanger = genererMdpNonMelanger();
-
-        ArrayList<Character> melange = new ArrayList<>();
-        for (char c: mdpNonMelanger.toCharArray()) {
+    private ArrayList<Character> melangerMdp(ArrayList<Character> melange, String baseMdp){
+        for(char c: baseMdp.toCharArray()){
             melange.add(c);
         }
-
         Collections.shuffle(melange);
+        return melange;
+    }
 
+    public String genererMdp(){
+        String baseMdp = genererMdpNonMelanger();
         StringBuilder sb = new StringBuilder();
 
-        for (char c: melange){
+        for (char c: melangerMdp(new ArrayList<Character>(), baseMdp)) {
             sb.append(c);
         }
 
         return sb.substring(0,this.tailleMdp);
     }
 
-    private int definirTailleMdp(String[] args){
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].equals("-n") && estUnNombre(args[i+1])) {
-                return Integer.parseInt(args[i + 1]);
+    private int definirTailleMdp(){
+        if(contientArg(args, "-n") && args.length > 1) {
+            for (int i = 0; i < args.length; i++) {
+                if (args[i].equals("-n") ) {
+                    if (estUnNombre(args[i + 1])) {
+                        return Integer.parseInt(args[i + 1]);
+                    }
+                    else {
+                        System.out.println("Erreur: L'argument pour -n doit être un nombre.");
+                        System.exit(1);
+                    }
+                }
             }
         }
         return genererTailleRandom();
@@ -83,5 +95,15 @@ public class GenerateurDeMdp {
         }catch (NumberFormatException e){
             return false;
         }
+    }
+
+    private void afficherAide(){
+        System.out.println(""" 
+                    Options:
+                    -n <nombre> : Définit la taille du mot de passe (par défaut entre 8 et 20)
+                    -c : Inclut les chiffres dans le mot de passe
+                    -s : Inclut les caractères spéciaux dans le mot de passe
+                    -h : Affiche cette aide
+                    """);
     }
 }
