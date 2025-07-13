@@ -1,5 +1,10 @@
+## IntelliJ ##
 .idea
+
+## Répertoire des fichiers compilés ##
 out
-genMdp.iml
 target
+
+## Autre ##
+genMdp.iml
 pom.xml
