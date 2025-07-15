@@ -35,16 +35,17 @@ def installer_genmdp(classpath, output_dir):
 	print(f"Script installé à : {chemin_script}")
 
 def main():
-	print("=== Instalation de genmdp ===")
+    print("=== Installation de genmdp ===")
 
-	chemin_classes = input("Chemin vers le dossier contenant GenMdp.class et GenerateurDeMdp.class : ").strip()
+    dossier_script = Path(__file__).parent.resolve()
+    dossier_classes = dossier_script / "classes"
 
-	if not Path(chemin_classes).exists():
-		print("Le chemin n'existe pas.")
-		return
+    if not dossier_classes.exists():
+        print("Le dossier n'existe pas. Compile tes .java.")
+        return
 
-	dossier_install = choisir_repertoire_installation()
-	installer_genmdp(chemin_classes, dossier_install)
+    dossier_install = choisir_repertoire_installation()
+    installer_genmdp(str(dossier_classes), dossier_install)
 
 if __name__ == "__main__":
 	main()
