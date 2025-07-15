@@ -37,6 +37,14 @@ def installer_genmdp(classpath, output_dir):
 def main():
     print("=== Installation de genmdp ===")
 
+    if sys.platform != "linux":
+            print("Ce script est conçu pour Linux.")
+            sys.exit(1)
+
+    if not shutil.which("java"):
+        print("Java n'est pas installé. Installe-le d'abord.")
+        sys.exit(1)
+
     dossier_script = Path(__file__).parent.resolve()
     dossier_classes = dossier_script / "classes"
 
